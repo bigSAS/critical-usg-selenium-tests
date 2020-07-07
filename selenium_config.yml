@@ -1,0 +1,5 @@
+browser: chrome
+action_framework:
+  wait_between_actions_sec: 1.5
+  timeout_find_element_sec: 10
+  timeout_wait_for_condition_sec: 30
