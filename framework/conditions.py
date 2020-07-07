@@ -13,3 +13,9 @@ class XpathExists:
             return True
         except:
             return False
+
+    def __str__(self):
+        return f'XpathExists("{self.__xpath}")'
+
+    def __repr__(self):
+        return self.__str__()

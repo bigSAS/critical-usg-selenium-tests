@@ -15,3 +15,10 @@ class Selector(NamedTuple):
     @property
     def selector_tuple(self) -> Tuple[str, str]:
         return self.using.value, self.value
+
+    def __str__(self):
+        return str(self.selector_tuple)
+
+    def __repr__(self):
+        return self.__str__()
+
