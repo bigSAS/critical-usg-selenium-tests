@@ -60,7 +60,7 @@ def test_foo( test_input,driver: WebDriver):
     #driver.find_element_by_class_name("HeaderMenu-link no-underline mr-3").click()
     driver.find_element_by_name("login").send_keys(user)
 
-    driver.find_element_by_name("password").send_keys("Cdrt368.")
+    driver.find_element_by_name("password").send_keys("???")
     driver.find_element_by_name("commit").click()
     try:
         driver.find_element_by_xpath("//a[@href='/new' and contains(@class, 'btn-sm')]")
