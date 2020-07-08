@@ -14,8 +14,8 @@ def driver():
 
 
 @pytest.fixture(scope='function')
-def actions(driver):
-    actions = Actions(BasicWebElementProvider(driver))
+def actions(driver, conf):
+    actions = Actions(BasicWebElementProvider(driver, config=conf))
     yield actions
 
 
