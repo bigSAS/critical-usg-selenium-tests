@@ -8,6 +8,7 @@ from framework.element_provider import BasicWebElementProvider
 @pytest.fixture(scope='function')
 def driver():
     driver = webdriver.Chrome()
+    driver.maximize_window()
     yield driver
 
     driver.quit()
