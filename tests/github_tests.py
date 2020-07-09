@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import pytest, yaml, os
 
 from framework.action_framework import Actions
+from pages.git_hub.delete_repo import DeleteRepo
 from pages.git_hub.login import GitHubLogin
 from pages.git_hub.new_repo import GitHubNewRepo
 
@@ -39,11 +40,11 @@ class GitHubUserWithRepo:
 
 
 asia = GitHubUser('kolakowskajoanna', get_password('kolakowskajoanna'))
-sas = GitHubUser('bigSAS', get_password('bigSAS'))
+# sas = GitHubUser('bigSAS', get_password('bigSAS'))
 
 
 @pytest.mark.learn
-@pytest.mark.parametrize("github_user", [sas, asia])
+@pytest.mark.parametrize("github_user", [ asia])
 def test_login(actions: Actions, github_user: GitHubUser):
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
@@ -75,3 +76,20 @@ def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
     github_new_repo_form.submit()
     assert github_new_repo_form.title == f'{github_user_with_repo.user.username}/{github_user_with_repo.repo.name}',\
         'repo nie powstalo'
+
+@pytest.mark.learn
+@pytest.mark.parametrize("github_user_with_repo", [
+    GitHubUserWithRepo(asia, GitHubRepo('adin'))])
+def test_delete_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user_with_repo.user.username,
+        password=github_user_with_repo.user.password
+    )
+    github_delete_page = DeleteRepo(actions, github_user_with_repo)
+    github_delete_page.open()
+    github_delete_page.delete()
+    github_delete_page.confirm()
+    assert github_delete_page.title == 'GitHub', 'nie usunieto'
