@@ -5,3 +5,4 @@ __pycache__/
 .idea/
 report.html
 tests.log
+selenium_config.local.yml
