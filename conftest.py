@@ -1,4 +1,4 @@
-import pytest, os
+import pytest, os, logging
 from selenium import webdriver
 
 from framework.action_framework import Actions
@@ -7,7 +7,9 @@ from framework.element_provider import BasicWebElementProvider
 
 DRIVER_SCOPE = 'session'
 CONFIG_PATH = os.environ.get('SELENIUM_CONFIG_PATH', None)
-if not CONFIG_PATH: raise EnvironmentError('SELENIUM_CONFIG_PATH not set!')
+if not CONFIG_PATH:
+    logging.warning('SELENIUM_CONFIG_PATH not set! using default selenium_config.yml')
+    CONFIG_PATH = 'selenium_config.yml'
 
 
 @pytest.fixture(scope=DRIVER_SCOPE)
