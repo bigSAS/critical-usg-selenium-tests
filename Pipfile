@@ -10,6 +10,3 @@ selenium = "*"
 pytest = "*"
 pyyaml = "*"
 pytest-html = "*"
-
-[requires]
-python_version = "3.8"
