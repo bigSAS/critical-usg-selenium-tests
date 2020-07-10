@@ -1,4 +1,7 @@
 browser: chrome
+browser_version: 83.0
+wd_hub_url: http://172.17.0.5:4444/wd/hub
+headless: false
 action_framework:
   wait_between_actions_sec: 1.5
   timeout_find_element_sec: 10
