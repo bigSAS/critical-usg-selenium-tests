@@ -12,6 +12,9 @@ class ActionFrameworkConfig:
 @dataclass
 class Config:
     browser: str = 'chrome'
+    browser_version: str = '83.0'
+    wd_hub_url: str = None
+    headless: bool = False
     action_framework: ActionFrameworkConfig = ActionFrameworkConfig()
 
     @staticmethod
