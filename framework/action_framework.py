@@ -56,6 +56,14 @@ class Actions:
         seconds = sec if sec else self.element_provider.config.action_framework.wait_between_actions_sec
         sleep(seconds)
 
+    def get_elements_text(self, selector: Selector, timeout: int = None):
+        lista = self.__element_provider.find_elements(selector, timeout)
+        elements = []
+        for item in lista:
+            elem = str(item.text)
+            elements.append(elem)
+        return elements
+
 
 class Page(ABC):
     url = None

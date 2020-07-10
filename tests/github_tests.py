@@ -6,6 +6,10 @@ from framework.action_framework import Actions
 from pages.git_hub.delete_repo import DeleteRepo
 from pages.git_hub.login import GitHubLogin
 from pages.git_hub.new_repo import GitHubNewRepo
+from selenium.webdriver.remote.webdriver import WebDriver
+from time import sleep
+
+from pages.repo_list import GitHubRepoList
 
 
 def get_password(username: str) -> str:
@@ -44,7 +48,7 @@ asia = GitHubUser('kolakowskajoanna', get_password('kolakowskajoanna'))
 
 
 @pytest.mark.learn
-@pytest.mark.parametrize("github_user", [ asia])
+@pytest.mark.parametrize("github_user", [asia])
 def test_login(actions: Actions, github_user: GitHubUser):
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
@@ -79,7 +83,7 @@ def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
 
 @pytest.mark.learn
 @pytest.mark.parametrize("github_user_with_repo", [
-    GitHubUserWithRepo(asia, GitHubRepo('adin'))])
+    GitHubUserWithRepo(asia, GitHubRepo('asd'))])
 def test_delete_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
@@ -93,3 +97,19 @@ def test_delete_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo
     github_delete_page.delete()
     github_delete_page.confirm()
     assert github_delete_page.title == 'GitHub', 'nie usunieto'
+
+
+@pytest.mark.learn
+@pytest.mark.parametrize("github_user", [asia])
+def test_repo_list(actions: Actions,driver: WebDriver, github_user: GitHubUser):
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user.username,
+        password=github_user.password
+    )
+    github_repo_list_page = GitHubRepoList(actions, github_user)
+    github_repo_list_page.open()
+    repos = github_repo_list_page.get()
+    print(repos)
