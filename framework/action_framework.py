@@ -1,6 +1,7 @@
 import logging
 from abc import ABC
 from time import sleep
+from typing import List
 
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -56,13 +57,12 @@ class Actions:
         seconds = sec if sec else self.element_provider.config.action_framework.wait_between_actions_sec
         sleep(seconds)
 
-    def get_elements_text(self, selector: Selector, timeout: int = None):
-        lista = self.__element_provider.find_elements(selector, timeout)
-        elements = []
-        for item in lista:
-            elem = str(item.text)
-            elements.append(elem)
-        return elements
+    def get_elements_text(self, selector: Selector, timeout: int = None) -> List[str]:
+        elements = self.__element_provider.find_elements(selector, timeout)
+        elements_text = []
+        for element in elements:
+            elements_text.append(element.text)
+        return elements_text
 
 
 class Page(ABC):

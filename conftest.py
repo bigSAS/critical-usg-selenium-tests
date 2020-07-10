@@ -36,6 +36,7 @@ def driver(conf):
     yield driver
     driver.quit()
 
+
 @pytest.fixture(scope=DRIVER_SCOPE)
 def actions(driver, conf):
     actions = Actions(BasicWebElementProvider(driver, conf))

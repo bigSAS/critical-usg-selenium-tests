@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 import pytest, yaml, os
 
@@ -7,9 +8,24 @@ from pages.git_hub.delete_repo import DeleteRepo
 from pages.git_hub.login import GitHubLogin
 from pages.git_hub.new_repo import GitHubNewRepo
 from selenium.webdriver.remote.webdriver import WebDriver
-from time import sleep
 
 from pages.repo_list import GitHubRepoList
+
+AVOID_DELETION_REPOS = {
+    'kolakowskajoanna': [
+        'praca_dyplomowa',
+        'zadanie_fakultet',
+        'fakultet',
+        'PSIK',
+        'product-mvc-app'
+    ]
+}
+
+
+def get_avoided_repos(username: str) -> List[str]:
+    repos = AVOID_DELETION_REPOS.get(username, None)
+    if repos is None: raise Exception(f'{username} not found :(')
+    return repos
 
 
 def get_password(username: str) -> str:
@@ -82,6 +98,7 @@ def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
     assert github_new_repo_form.title == f'{github_user_with_repo.user.username}/{github_user_with_repo.repo.name}',\
         'repo nie powstalo'
 
+
 @pytest.mark.learn
 @pytest.mark.parametrize("github_user_with_repo", [
     GitHubUserWithRepo(asia, GitHubRepo('asd'))])
@@ -102,7 +119,7 @@ def test_delete_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo
 
 @pytest.mark.learn
 @pytest.mark.parametrize("github_user", [asia])
-def test_repo_list(actions: Actions,driver: WebDriver, github_user: GitHubUser):
+def test_delete_repos(actions: Actions, driver: WebDriver, github_user: GitHubUser):
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
     github_login_page.goto_login_form()
@@ -112,5 +129,15 @@ def test_repo_list(actions: Actions,driver: WebDriver, github_user: GitHubUser):
     )
     github_repo_list_page = GitHubRepoList(actions, github_user)
     github_repo_list_page.open()
-    repos = github_repo_list_page.get()
-    print(repos)
+    repos_for_deletion = github_repo_list_page.get_names(get_avoided_repos(github_user.username))
+    for repo_name in repos_for_deletion:
+        github_user_with_repo = GitHubUserWithRepo(
+            user=github_user,
+            repo=GitHubRepo(name=repo_name)
+        )
+        github_delete_page = DeleteRepo(actions, github_user_with_repo)
+        github_delete_page.open()
+        github_delete_page.delete()
+        github_delete_page.confirm()
+
+# todo: test usuwajacy tylko repozytoria, ktore zaczynaja sie od prefixu np TEST__ :)
