@@ -5,7 +5,7 @@ from framework.action_framework import Actions
 from framework.configuration import Config
 from framework.element_provider import BasicWebElementProvider
 
-DRIVER_SCOPE = 'session'
+DRIVER_SCOPE = os.environ.get('DRIVER_SCOPE', 'function')
 CONFIG_PATH = os.environ.get('SELENIUM_CONFIG_PATH', None)
 if not CONFIG_PATH:
     logging.warning('SELENIUM_CONFIG_PATH not set! using default selenium_config.yml')
