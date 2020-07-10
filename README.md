@@ -6,7 +6,7 @@ Install pipenv `pip install pipenv`
 Download chromedriver from https://chromedriver.chromium.org/   
 Add chromedriver to PATH.   
 
-Run tests with HTML report `pipenv run pytest -v --html=report.html --self-contained-html --lo`   
+Run tests with HTML report `pipenv run pytest -v --html=report.html --self-contained-html --log-file=tests.log`   
 
 todo:
 * actions readme

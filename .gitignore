@@ -5,4 +5,5 @@ __pycache__/
 .idea/
 report.html
 tests.log
+github_passwords.yml
 selenium_config.local.yml

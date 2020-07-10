@@ -32,15 +32,14 @@ def driver(conf):
         )
     else:
         driver = webdriver.Chrome()
+
     yield driver
-
     driver.quit()
-
 
 @pytest.fixture(scope=DRIVER_SCOPE)
 def actions(driver, conf):
     actions = Actions(BasicWebElementProvider(driver, conf))
-    yield actions
+    return actions
 
 
 @pytest.fixture(scope='session')
