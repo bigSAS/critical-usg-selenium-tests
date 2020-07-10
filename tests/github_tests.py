@@ -14,8 +14,9 @@ from pages.repo_list import GitHubRepoList
 
 def get_password(username: str) -> str:
     try:
+        path = os.environ.get('GITHUB_PASSWORDZ_PATH', None)
         current_dir = os.path.dirname(__file__)
-        filepath = current_dir + '\\github_passwords.yml'
+        filepath = path if path else current_dir + '\\github_passwords.yml'
         with open(filepath, mode='r', encoding='utf-8') as f:
             loaded: dict = yaml.load(f, Loader=yaml.FullLoader)
             password = loaded.get(username, None)
