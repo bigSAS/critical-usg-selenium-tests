@@ -82,7 +82,7 @@ class Page(ABC):
     def open(self, url: str = None):
         logging.info(f'open: "{url}"')
         uri = url if url else self.url
-        if not self.url:
+        if not uri:
             logging.warning('Page url not set! skipping!')
         else:
             self.actions.element_provider.driver.get(uri)
