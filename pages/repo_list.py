@@ -28,3 +28,12 @@ class GitHubRepoList(Page):
             if repo_name not in avoided_repos:
                 result.append(repo_name)
         return result
+
+    def get_names_with_prefix(self):
+        repos_names = self.actions.get_elements_text(self.repo_name_label)
+        result = []
+        for repo_name in repos_names:
+            if repo_name.startswith('TEST__'): result.append(repo_name)
+        print(result)
+        return result
+

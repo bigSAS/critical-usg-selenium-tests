@@ -79,8 +79,8 @@ def test_login(actions: Actions, github_user: GitHubUser):
 
 @pytest.mark.learn
 @pytest.mark.parametrize("github_user_with_repo", [
-    GitHubUserWithRepo(asia, GitHubRepo('yoloo')),
-    GitHubUserWithRepo(asia, GitHubRepo('asd', False))
+    GitHubUserWithRepo(asia, GitHubRepo('TEST__jolo')),
+    GitHubUserWithRepo(asia, GitHubRepo('INNE_cos', False))
 
 ])
 def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
@@ -141,3 +141,27 @@ def test_delete_repos(actions: Actions, driver: WebDriver, github_user: GitHubUs
         github_delete_page.confirm()
 
 # todo: test usuwajacy tylko repozytoria, ktore zaczynaja sie od prefixu np TEST__ :)
+
+
+@pytest.mark.learn
+@pytest.mark.parametrize("github_user", [asia])
+def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_user: GitHubUser):
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user.username,
+        password=github_user.password
+    )
+    github_repo_list_page = GitHubRepoList(actions, github_user)
+    github_repo_list_page.open()
+    repos_for_deletion = github_repo_list_page.get_names_with_prefix()
+    for repo_name in repos_for_deletion:
+        github_user_with_repo = GitHubUserWithRepo(
+            user=github_user,
+            repo=GitHubRepo(name=repo_name)
+        )
+        github_delete_page = DeleteRepo(actions, github_user_with_repo)
+        github_delete_page.open()
+        github_delete_page.delete()
+        github_delete_page.confirm()
