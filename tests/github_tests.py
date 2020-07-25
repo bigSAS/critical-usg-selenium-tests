@@ -2,7 +2,7 @@ from typing import List
 
 import pytest, yaml, os
 
-from dataclasses.github import GitHubUser, GitHubUserWithRepo, GitHubRepo
+from data_classes.github import GitHubUser, GitHubUserWithRepo, GitHubRepo
 from framework.action_framework import Actions
 from pages.git_hub.delete_repo import DeleteRepo
 from pages.git_hub.login import GitHubLogin
@@ -122,8 +122,6 @@ def test_delete_repos(actions: Actions, driver: WebDriver, github_user: GitHubUs
         github_delete_page.open()
         github_delete_page.delete()
         github_delete_page.confirm()
-
-# todo: test usuwajacy tylko repozytoria, ktore zaczynaja sie od prefixu np TEST__ :)
 
 
 @pytest.mark.learn

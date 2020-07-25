@@ -1,4 +1,4 @@
-from dataclasses.github import GitHubUser
+from data_classes.github import GitHubUser
 from framework.action_framework import Page, Actions
 # from framework.conditions import XpathExists
 from framework.selector import Selector, Using
