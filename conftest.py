@@ -32,6 +32,8 @@ def driver(conf):
         )
     else:
         driver = webdriver.Chrome()
+        driver.maximize_window()
+        # todo: ogarnac tak zeby byl konfig lokalny i konfig dla jenkinsa :)
 
     yield driver
     driver.quit()

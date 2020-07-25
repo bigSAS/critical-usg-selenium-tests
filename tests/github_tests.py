@@ -1,11 +1,12 @@
-from dataclasses import dataclass
 from typing import List
 
 import pytest, yaml, os
 
+from dataclasses.github import GitHubUser, GitHubUserWithRepo, GitHubRepo
 from framework.action_framework import Actions
 from pages.git_hub.delete_repo import DeleteRepo
 from pages.git_hub.login import GitHubLogin
+from pages.git_hub.new_issue import GitHubNewIssue
 from pages.git_hub.new_repo import GitHubNewRepo
 from selenium.webdriver.remote.webdriver import WebDriver
 
@@ -40,24 +41,6 @@ def get_password(username: str) -> str:
             return password
     except Exception as e:
         raise Exception('Read password file failed ...\n' + repr(e))
-
-
-@dataclass
-class GitHubUser:
-    username: str
-    password: str
-
-
-@dataclass
-class GitHubRepo:
-    name: str
-    public: bool = True
-
-
-class GitHubUserWithRepo:
-    def __init__(self, user: GitHubUser, repo: GitHubRepo):
-        self.user = user
-        self.repo = repo
 
 
 asia = GitHubUser('kolakowskajoanna', get_password('kolakowskajoanna'))
@@ -165,3 +148,33 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
         github_delete_page.open()
         github_delete_page.delete()
         github_delete_page.confirm()
+
+
+@pytest.mark.learn
+@pytest.mark.debugin
+@pytest.mark.parametrize(
+    "github_user, reponame, title, comment",
+    [
+        [asia, 'test', 'hajo error', 'dej fitke'],
+    ]
+)
+def test_add_new_issue(actions: Actions, driver: WebDriver,
+                       github_user: GitHubUser, reponame: str, title: str, comment: str):
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user.username,
+        password=github_user.password
+    )
+    github_add_new_issue_page = GitHubNewIssue(
+        actions=actions,
+        github_user=github_user,
+        reponame=reponame
+    )
+    github_add_new_issue_page.open()
+    github_add_new_issue_page.fill_form(
+        title=title,
+        comment=comment
+    )
+    github_add_new_issue_page.submit()
