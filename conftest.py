@@ -102,8 +102,9 @@ def pytest_runtest_makereport(item):
         if report.failed:
             actions: Actions = item.funcargs.get('actions', None)
             if actions:
+                screenshots_dir = os.environ.get('SCREENSHOTS_DIR', ROOT_DIR)
                 name = f'{item.function.__name__}__{str(uuid.uuid4()).replace("-", "")[:15]}.png'
-                spath = f'{ROOT_DIR}/reports/screenshots/{name}'
+                spath = f'{screenshots_dir}/{name}' if screenshots_dir else f'{ROOT_DIR}/reports/screenshots/{name}'
                 actions.element_provider.driver.save_screenshot(spath)
                 dom = '<div class="image">'
                 dom += f'<a href="screenshots/{name}" target="_blank">'
