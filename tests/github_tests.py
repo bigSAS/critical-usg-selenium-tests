@@ -83,8 +83,38 @@ def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
 
 
 @pytest.mark.learn
+@pytest.mark.debugin
+@pytest.mark.parametrize(
+    "github_user, reponame, title, comment",
+    [
+        [asia, 'test', 'hajo error', 'dej fitke'],
+    ]
+)
+def test_add_new_issue(actions: Actions, driver: WebDriver,
+                       github_user: GitHubUser, reponame: str, title: str, comment: str):
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user.username,
+        password=github_user.password
+    )
+    github_add_new_issue_page = GitHubNewIssue(
+        actions=actions,
+        github_user=github_user,
+        reponame=reponame
+    )
+    github_add_new_issue_page.open()
+    github_add_new_issue_page.fill_form(
+        title=title,
+        comment=comment
+    )
+    github_add_new_issue_page.submit()
+
+
+@pytest.mark.learn
 @pytest.mark.parametrize("github_user_with_repo", [
-    GitHubUserWithRepo(asia, GitHubRepo('asd'))])
+    GitHubUserWithRepo(asia, GitHubRepo('INNE_cos'))])
 def test_delete_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
@@ -148,31 +178,3 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
         github_delete_page.confirm()
 
 
-@pytest.mark.learn
-@pytest.mark.debugin
-@pytest.mark.parametrize(
-    "github_user, reponame, title, comment",
-    [
-        [asia, 'test', 'hajo error', 'dej fitke'],
-    ]
-)
-def test_add_new_issue(actions: Actions, driver: WebDriver,
-                       github_user: GitHubUser, reponame: str, title: str, comment: str):
-    github_login_page = GitHubLogin(actions)
-    github_login_page.open()
-    github_login_page.goto_login_form()
-    github_login_page.login(
-        username=github_user.username,
-        password=github_user.password
-    )
-    github_add_new_issue_page = GitHubNewIssue(
-        actions=actions,
-        github_user=github_user,
-        reponame=reponame
-    )
-    github_add_new_issue_page.open()
-    github_add_new_issue_page.fill_form(
-        title=title,
-        comment=comment
-    )
-    github_add_new_issue_page.submit()
