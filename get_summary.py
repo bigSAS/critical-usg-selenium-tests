@@ -5,4 +5,4 @@ if __name__ == '__main__':
         first_line = file.readline()
         for last_line in file:
             pass
-        print(last_line)
+        print(last_line.replace('=================', '').strip())
