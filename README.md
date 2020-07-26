@@ -19,3 +19,7 @@ action_framework:
   timeout_find_element_sec: 5
   timeout_wait_for_condition_sec: 15
 ```
+
+#### Tips   
+Random string powershell `$env:output =-join ((65..90) + (97..122) | Get-Random -Count 25 | % {[char]$_})`
+Random string linuxshell `output=$(tr -cd '[:alnum:]' < /dev/urandom | head -c25)`

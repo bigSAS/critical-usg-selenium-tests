@@ -11,3 +11,5 @@ configurationz/*.yml
 configurationz/*.json
 configurationz/*.txt
 style.css
+reports/*.html
+reports/screenshots/*.png
