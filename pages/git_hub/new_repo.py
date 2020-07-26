@@ -10,18 +10,20 @@ class GitHubNewRepo(Page):
     visibility_public_check = Selector(Using.ID, 'repository_visibility_public')
     visibility_private_check = Selector(Using.ID, 'repository_visibility_private')
     submit_button = Selector(Using.XPATH, "//div[@class='js-with-permission-fields']//button[@type='submit']")
-    license_button = Selector(Using.ID, "details-01fda6")
+    license_dropdown_activator = Selector(Using.XPATH, "//summary[@role='button']//span[contains(., 'Add a license')]")
+    license_option = Selector(Using.XPATH, "//div[@aria-label='Licenses']//label[contains(., '{label}')]")
 
     def goto_new_repo_form(self):
         self.actions.click(self.new_repo_button)
         self.actions.wait_for(XpathExists("//form[@id='new_repository']"))
 
-    def fill_form(self, reponame: str, public=True):
+    def fill_form(self, reponame: str, public=True, license_label: str = "Apache License 2.0"):
         self.actions.type_text(self.new_repo_name_input, reponame)
         # self.actions.wait_for(XpathExists("//dd[@class='success']"))
         if public: self.actions.click(self.visibility_public_check)
         else: self.actions.click(self.visibility_private_check)
-        self.actions.click(self.license_button)
+        self.actions.click(self.license_dropdown_activator)
+        self.actions.click(self.license_option.parameterized(label=license_label))
 
     def submit(self):
         self.actions.click(self.submit_button)
