@@ -19,7 +19,9 @@ def test_unit_test():
     pass
 '''
 
+
 @pytest.mark.unit
+@pytest.mark.debug
 def test_unit_test():
     """
     First unit test :)
