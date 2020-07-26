@@ -157,8 +157,8 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
     # todo: dodac asercje
 
 
-@pytest.mark.learn
-@pytest.mark.debugin
+@pytest.mark.github  # todo: reszta testow zamiast learn -> github
+@pytest.mark.develop
 @pytest.mark.parametrize(
     "github_user, reponame, title, comment",
     [
