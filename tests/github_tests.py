@@ -80,6 +80,13 @@ def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
     github_new_repo_form.submit()
     assert github_new_repo_form.title == f'{github_user_with_repo.user.username}/{github_user_with_repo.repo.name}',\
         'repo nie powstalo'
+    # todo: add MIT License
+
+# todo: test add new branch
+# todo: test add commit
+# todo: test create pull request
+# todo: test confirm pull request and merge
+# todo: test delete branch
 
 
 @pytest.mark.learn
@@ -122,6 +129,7 @@ def test_delete_repos(actions: Actions, driver: WebDriver, github_user: GitHubUs
         github_delete_page.open()
         github_delete_page.delete()
         github_delete_page.confirm()
+    # todo: dodac asercje
 
 
 @pytest.mark.learn
@@ -146,6 +154,7 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
         github_delete_page.open()
         github_delete_page.delete()
         github_delete_page.confirm()
+    # todo: dodac asercje
 
 
 @pytest.mark.learn
@@ -176,3 +185,4 @@ def test_add_new_issue(actions: Actions, driver: WebDriver,
         comment=comment
     )
     github_add_new_issue_page.submit()
+    # todo: dodac asercje

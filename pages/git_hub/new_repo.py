@@ -10,6 +10,7 @@ class GitHubNewRepo(Page):
     visibility_public_check = Selector(Using.ID, 'repository_visibility_public')
     visibility_private_check = Selector(Using.ID, 'repository_visibility_private')
     submit_button = Selector(Using.XPATH, "//div[@class='js-with-permission-fields']//button[@type='submit']")
+    license_button = Selector(Using.ID, "details-01fda6")
 
     def goto_new_repo_form(self):
         self.actions.click(self.new_repo_button)
@@ -20,6 +21,7 @@ class GitHubNewRepo(Page):
         # self.actions.wait_for(XpathExists("//dd[@class='success']"))
         if public: self.actions.click(self.visibility_public_check)
         else: self.actions.click(self.visibility_private_check)
+        self.actions.click(self.license_button)
 
     def submit(self):
         self.actions.click(self.submit_button)
