@@ -14,6 +14,7 @@ from pages.repo_list import GitHubRepoList
 
 AVOID_DELETION_REPOS = {
     'kolakowskajoanna': [
+        'TEST__jolo'
         'praca_dyplomowa',
         'zadanie_fakultet',
         'fakultet',
@@ -47,9 +48,17 @@ asia = GitHubUser('kolakowskajoanna', get_password('kolakowskajoanna'))
 # sas = GitHubUser('bigSAS', get_password('bigSAS'))
 
 
-@pytest.mark.learn
+@pytest.mark.github
 @pytest.mark.parametrize("github_user", [asia])
 def test_login(actions: Actions, github_user: GitHubUser):
+    """
+    Logowanie
+
+    1.otwórz formularza logowanie
+    2.uzupełnij formularza logowania
+    3.kliknij “ Sign in”
+
+    """
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
     github_login_page.goto_login_form()
@@ -60,13 +69,21 @@ def test_login(actions: Actions, github_user: GitHubUser):
     assert github_login_page.title == 'GitHub', "Tytul strony jest niepoprawny"
 
 
-@pytest.mark.learn
+@pytest.mark.github
 @pytest.mark.parametrize("github_user_with_repo", [
     GitHubUserWithRepo(asia, GitHubRepo('TEST__jolo')),
     GitHubUserWithRepo(asia, GitHubRepo('INNE_cos', False))
 
 ])
 def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
+    """
+    Dodanie nowego repozytorium
+
+    1.zaloguj się
+    2.przejdź do formularza tworzenia nowego repozytorium
+    3.uzupełnij formularz
+    4.potwierdź poprzez “Create repository”
+    """
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
     github_login_page.goto_login_form()
@@ -82,7 +99,7 @@ def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
         'repo nie powstalo'
 
 
-@pytest.mark.learn
+@pytest.mark.github
 @pytest.mark.debugin
 @pytest.mark.parametrize(
     "github_user, reponame, title, comment",
@@ -92,6 +109,14 @@ def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
 )
 def test_add_new_issue(actions: Actions, driver: WebDriver,
                        github_user: GitHubUser, reponame: str, title: str, comment: str):
+    """
+    Dodanie new issue
+
+    1.zaloguj sie
+    2.otwórz formularz zgłaszania
+    3.uzupełnij formularz
+    4.kliknij “Submit new issue”
+    """
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
     github_login_page.goto_login_form()
@@ -112,10 +137,14 @@ def test_add_new_issue(actions: Actions, driver: WebDriver,
     github_add_new_issue_page.submit()
 
 
-@pytest.mark.learn
+@pytest.mark.github
 @pytest.mark.parametrize("github_user_with_repo", [
     GitHubUserWithRepo(asia, GitHubRepo('INNE_cos'))])
 def test_delete_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
+    """
+    Usunięcie danego repozytorium
+
+    """
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
     github_login_page.goto_login_form()
@@ -130,9 +159,12 @@ def test_delete_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo
     assert github_delete_page.title == 'GitHub', 'nie usunieto'
 
 
-@pytest.mark.learn
+@pytest.mark.github
 @pytest.mark.parametrize("github_user", [asia])
 def test_delete_repos(actions: Actions, driver: WebDriver, github_user: GitHubUser):
+    """
+    Usunięcie repozytoriów spoza whitelist
+    """
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
     github_login_page.goto_login_form()
@@ -154,9 +186,13 @@ def test_delete_repos(actions: Actions, driver: WebDriver, github_user: GitHubUs
         github_delete_page.confirm()
 
 
-@pytest.mark.learn
+@pytest.mark.github
 @pytest.mark.parametrize("github_user", [asia])
 def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_user: GitHubUser):
+    """
+    Usunięcie repozytoriów z prefixem 'TEST__'
+
+    """
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
     github_login_page.goto_login_form()
