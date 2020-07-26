@@ -1,11 +1,12 @@
-from dataclasses import dataclass
 from typing import List
 
 import pytest, yaml, os
 
+from data_classes.github import GitHubUser, GitHubUserWithRepo, GitHubRepo
 from framework.action_framework import Actions
 from pages.git_hub.delete_repo import DeleteRepo
 from pages.git_hub.login import GitHubLogin
+from pages.git_hub.new_issue import GitHubNewIssue
 from pages.git_hub.new_repo import GitHubNewRepo
 from selenium.webdriver.remote.webdriver import WebDriver
 
@@ -42,24 +43,6 @@ def get_password(username: str) -> str:
         raise Exception('Read password file failed ...\n' + repr(e))
 
 
-@dataclass
-class GitHubUser:
-    username: str
-    password: str
-
-
-@dataclass
-class GitHubRepo:
-    name: str
-    public: bool = True
-
-
-class GitHubUserWithRepo:
-    def __init__(self, user: GitHubUser, repo: GitHubRepo):
-        self.user = user
-        self.repo = repo
-
-
 asia = GitHubUser('kolakowskajoanna', get_password('kolakowskajoanna'))
 # sas = GitHubUser('bigSAS', get_password('bigSAS'))
 
@@ -79,8 +62,8 @@ def test_login(actions: Actions, github_user: GitHubUser):
 
 @pytest.mark.learn
 @pytest.mark.parametrize("github_user_with_repo", [
-    GitHubUserWithRepo(asia, GitHubRepo('yoloo')),
-    GitHubUserWithRepo(asia, GitHubRepo('asd', False))
+    GitHubUserWithRepo(asia, GitHubRepo('TEST__jolo')),
+    GitHubUserWithRepo(asia, GitHubRepo('INNE_cos', False))
 
 ])
 def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
@@ -140,4 +123,56 @@ def test_delete_repos(actions: Actions, driver: WebDriver, github_user: GitHubUs
         github_delete_page.delete()
         github_delete_page.confirm()
 
-# todo: test usuwajacy tylko repozytoria, ktore zaczynaja sie od prefixu np TEST__ :)
+
+@pytest.mark.learn
+@pytest.mark.parametrize("github_user", [asia])
+def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_user: GitHubUser):
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user.username,
+        password=github_user.password
+    )
+    github_repo_list_page = GitHubRepoList(actions, github_user)
+    github_repo_list_page.open()
+    repos_for_deletion = github_repo_list_page.get_names_with_prefix()
+    for repo_name in repos_for_deletion:
+        github_user_with_repo = GitHubUserWithRepo(
+            user=github_user,
+            repo=GitHubRepo(name=repo_name)
+        )
+        github_delete_page = DeleteRepo(actions, github_user_with_repo)
+        github_delete_page.open()
+        github_delete_page.delete()
+        github_delete_page.confirm()
+
+
+@pytest.mark.learn
+@pytest.mark.debugin
+@pytest.mark.parametrize(
+    "github_user, reponame, title, comment",
+    [
+        [asia, 'test', 'hajo error', 'dej fitke'],
+    ]
+)
+def test_add_new_issue(actions: Actions, driver: WebDriver,
+                       github_user: GitHubUser, reponame: str, title: str, comment: str):
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user.username,
+        password=github_user.password
+    )
+    github_add_new_issue_page = GitHubNewIssue(
+        actions=actions,
+        github_user=github_user,
+        reponame=reponame
+    )
+    github_add_new_issue_page.open()
+    github_add_new_issue_page.fill_form(
+        title=title,
+        comment=comment
+    )
+    github_add_new_issue_page.submit()

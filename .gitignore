@@ -7,3 +7,7 @@ report.html
 tests.log
 github_passwords.yml
 selenium_config.local.yml
+configurationz/*.yml
+configurationz/*.json
+configurationz/*.txt
+style.css

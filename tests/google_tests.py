@@ -70,8 +70,6 @@ def test_foo( test_input,driver: WebDriver):
     assert button_exists, "przycisk New powinien istniec"
     sleep(4)
     assert (driver.title == 'GitHub'), "tytul strony powinien byc: 'github'"
-    # todo: assercja ze instnieje przycisk do zakladania nowego repo
-    # todo: new repo test
     button_new = driver.find_element_by_xpath("//a[@href='/new' and contains(@class, 'btn-sm')]")
     button_new.click()
     driver.find_element_by_name('repository[name]').send_keys(test_input)

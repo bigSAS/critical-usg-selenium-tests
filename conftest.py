@@ -8,8 +8,8 @@ from framework.element_provider import BasicWebElementProvider
 DRIVER_SCOPE = os.environ.get('DRIVER_SCOPE', 'function')
 CONFIG_PATH = os.environ.get('SELENIUM_CONFIG_PATH', None)
 if not CONFIG_PATH:
-    logging.warning('SELENIUM_CONFIG_PATH not set! using default selenium_config.yml')
-    CONFIG_PATH = 'selenium_config.yml'
+    logging.warning('SELENIUM_CONFIG_PATH not set! using default config.yml')
+    CONFIG_PATH = 'configurationz/config.yml'
 
 
 @pytest.fixture(scope=DRIVER_SCOPE)
@@ -32,6 +32,7 @@ def driver(conf):
         )
     else:
         driver = webdriver.Chrome()
+        driver.maximize_window()
 
     yield driver
     driver.quit()
