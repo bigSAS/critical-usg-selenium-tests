@@ -103,7 +103,7 @@ def pytest_runtest_makereport(item):
             extra.append(pytest_html.extras.html(f'<h4 style="margin: 8px;">Test description</h4>{docstr}'))
         if report.failed:
             actions: Actions = item.funcargs.get('actions', None)
-            actions: Actions = item.funcargs.get('driver', None)
+            driver: Actions = item.funcargs.get('driver', None)
             wd = None
             if actions: wd = actions.element_provider.driver
             if driver: wd = driver
