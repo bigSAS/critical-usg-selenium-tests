@@ -87,7 +87,7 @@ def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
 @pytest.mark.parametrize(
     "github_user, reponame, title, comment",
     [
-        [asia, 'test', 'hajo error', 'dej fitke'],
+        [asia, 'INNE_cos', 'hajo error', 'dej fitke'],
     ]
 )
 def test_add_new_issue(actions: Actions, driver: WebDriver,
