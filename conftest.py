@@ -103,11 +103,15 @@ def pytest_runtest_makereport(item):
             extra.append(pytest_html.extras.html(f'<h4 style="margin: 8px;">Test description</h4>{docstr}'))
         if report.failed:
             actions: Actions = item.funcargs.get('actions', None)
-            if actions:
+            actions: Actions = item.funcargs.get('driver', None)
+            wd = None
+            if actions: wd = actions.element_provider.driver
+            if driver: wd = driver
+            if wd:
                 name = f'{item.function.__name__}__{str(uuid.uuid4()).replace("-", "")[:15]}.png'
                 spath = f'{SCREENSHOTS_DIR}/{name}'
                 print('taking screenshot ->', spath)
-                actions.element_provider.driver.save_screenshot(spath)
+                wd.save_screenshot(spath)
                 dom = '<div class="image">'
                 dom += f'<a href="screenshots/{name}" target="_blank">'
                 dom += f'<img src="screenshots/{name}"></a></div>'
