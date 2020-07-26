@@ -18,7 +18,7 @@ class Selector(NamedTuple):
 
     def parameterized(self, **kwargs):
         pvalue = self.value.format(**kwargs)
-        return self.using.value, pvalue
+        return Selector(self.using, pvalue)
 
     def __str__(self):
         return str(self.selector_tuple)
