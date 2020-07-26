@@ -19,3 +19,10 @@ class GitHubLogin(Page):
         self.actions.submit()
         self.actions.wait_for(XpathExists("//div[@id='dashboard']"))
 
+    def live_login(self):
+        self.actions.type_text(selector=self.username_input, text=input('login: '))
+        self.actions.type_text(selector=self.password_input, text=input('password: '))
+        self.actions.submit()
+        token = Selector(Using.XPATH, "//form//input[@type='text']")
+        self.actions.type_text(selector=token, text=input('token: '))
+        self.actions.submit()
