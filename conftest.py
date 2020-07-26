@@ -15,7 +15,7 @@ if not CONFIG_PATH:
 
 ROOT_DIR = os.path.dirname(__file__)
 REPORT_DIR = os.environ.get('REPORT_DIR', ROOT_DIR + '/reports')
-SCREENSHOTS_DIR = os.environ.get(REPORT_DIR + '/screenshots')
+SCREENSHOTS_DIR = REPORT_DIR + '/screenshots'
 
 
 @pytest.fixture(scope=DRIVER_SCOPE)
@@ -106,6 +106,7 @@ def pytest_runtest_makereport(item):
             if actions:
                 name = f'{item.function.__name__}__{str(uuid.uuid4()).replace("-", "")[:15]}.png'
                 spath = f'{SCREENSHOTS_DIR}/{name}'
+                print('taking screenshot ->', spath)
                 actions.element_provider.driver.save_screenshot(spath)
                 dom = '<div class="image">'
                 dom += f'<a href="screenshots/{name}" target="_blank">'
