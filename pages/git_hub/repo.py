@@ -8,6 +8,7 @@ class GitHubRepoMain(Page):
     url = 'https://github.com/{username}/{reponame}'
     branches_list = Selector(Using.ID, 'branch-select-menu')
     branch_name_input = Selector(Using.ID, 'context-commitish-filter-field')
+    create_branch_button = Selector(Using.XPATH, "//span[contains(.,'Create branch')]")
 
     def __init__(self, actions: Actions, github_user_with_repo: GitHubUserWithRepo):
         super().__init__(actions)
@@ -26,5 +27,6 @@ class GitHubRepoMain(Page):
         self.actions.click(self.branches_list)
         self.actions.type_text(self.branch_name_input, branchname)
         self.actions.wait_for(XpathExists("//span[contains(.,'Create branch')]"))
+        self.actions.click(self.create_branch_button)
 
 
