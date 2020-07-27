@@ -269,6 +269,7 @@ def test_delete_branch(actions: Actions, driver: WebDriver,
         password=github_user_with_repo.user.password
     )
     github_branches_page = GitHubBranches(actions, github_user_with_repo)
+    github_branches_page.open()
     github_branches_page.delete_branch(branchname=branchname)
     xpath_format = f'//li//div[contains(.,"{branchname}") and contains(.,"Deleted just now by ")]'
     assert XpathExists(xpath_format), 'Nie usunięto repo'
