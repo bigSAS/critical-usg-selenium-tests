@@ -4,6 +4,7 @@ import pytest, yaml, os
 
 from data_classes.github import GitHubUser, GitHubUserWithRepo, GitHubRepo
 from framework.action_framework import Actions
+from framework.conditions import XpathExists
 from pages.git_hub.delete_repo import DeleteRepo
 from pages.git_hub.login import GitHubLogin
 from pages.git_hub.new_issue import GitHubNewIssue
@@ -223,7 +224,7 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
 @pytest.mark.parametrize(
     "github_user_with_repo, branchname",
     [
-        [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), 'asjo']
+        [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), "asjo"]
     ]
 )
 def test_add_new_branch(actions: Actions, driver: WebDriver,
@@ -238,8 +239,8 @@ def test_add_new_branch(actions: Actions, driver: WebDriver,
     github_repo_page = GitHubRepoMain(actions, github_user_with_repo)
     github_repo_page.open()
     github_repo_page.add_branch(branchname=branchname)
-    assert github_repo_page.title == f'{github_user_with_repo.user.username}/{github_user_with_repo.repo.name} ' \
-                                     f'at {branchname}'
+    xpath_format = f'//span[@class="css-truncate-target" and contains(.,"{branchname}")]'
+    assert XpathExists(xpath_format), 'nie powstało nowe repo'
 
 
 # todo: test add new branch
