@@ -5,6 +5,7 @@ import pytest, yaml, os
 from data_classes.github import GitHubUser, GitHubUserWithRepo, GitHubRepo
 from framework.action_framework import Actions
 from framework.conditions import XpathExists
+from pages.git_hub.branches import GitHubBranches
 from pages.git_hub.delete_repo import DeleteRepo
 from pages.git_hub.login import GitHubLogin
 from pages.git_hub.new_issue import GitHubNewIssue
@@ -99,7 +100,7 @@ def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
     github_new_repo_form.goto_new_repo_form()
     github_new_repo_form.fill_form(public=github_user_with_repo.repo.public, reponame=github_user_with_repo.repo.name)
     github_new_repo_form.submit()
-    assert github_new_repo_form.title == f'{github_user_with_repo.user.username}/{github_user_with_repo.repo.name}',\
+    assert github_new_repo_form.title == f'{github_user_with_repo.user.username}/{github_user_with_repo.repo.name}', \
         'repo nie powstalo'
 
 
@@ -229,6 +230,10 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
 )
 def test_add_new_branch(actions: Actions, driver: WebDriver,
                         github_user_with_repo: GitHubUserWithRepo, branchname: str):
+    """
+    Add new branch
+
+    """
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
     github_login_page.goto_login_form()
@@ -243,8 +248,33 @@ def test_add_new_branch(actions: Actions, driver: WebDriver,
     assert XpathExists(xpath_format), 'nie powstało nowe repo'
 
 
-# todo: test add new branch
+@pytest.mark.github
+@pytest.mark.parametrize(
+    "github_user_with_repo, branchname",
+    [
+        [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), "asjo"]
+    ]
+)
+def test_delete_branch(actions: Actions, driver: WebDriver,
+                       github_user_with_repo: GitHubUserWithRepo, branchname: str):
+    """
+    Delete branch
+
+    """
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user_with_repo.user.username,
+        password=github_user_with_repo.user.password
+    )
+    github_branches_page = GitHubBranches(actions, github_user_with_repo)
+    github_branches_page.delete_branch(branchname=branchname)
+    xpath_format = f'//li//div[contains(.,"{branchname}") and contains(.,"Deleted just now by ")]'
+    assert XpathExists(xpath_format), 'Nie usunięto repo'
+
+
 # todo: test add commit from new branch
 # todo: test create pull request master <- new branch
 # todo: confirm merge
-# todo: delete branch
+
