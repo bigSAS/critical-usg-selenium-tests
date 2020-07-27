@@ -5,7 +5,7 @@ from data_classes.github import GitHubUserWithRepo
 
 
 class GitHubBranches(Page):
-    url = 'https://github.com/{username}/{reponame}/branches}'
+    url = 'https://github.com/{username}/{reponame}/branches'
     delete_branch_button = Selector(Using.XPATH,
                                     '//form[@action="/kolakowskajoanna/fakultet/branches/{branchname}"]//button')
 
