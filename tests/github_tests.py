@@ -222,6 +222,7 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
 
 
 @pytest.mark.github
+@pytest.mark.test
 @pytest.mark.parametrize(
     "github_user_with_repo, branchname",
     [
@@ -249,6 +250,7 @@ def test_add_new_branch(actions: Actions, driver: WebDriver,
 
 
 @pytest.mark.github
+@pytest.mark.test
 @pytest.mark.parametrize(
     "github_user_with_repo, branchname",
     [
