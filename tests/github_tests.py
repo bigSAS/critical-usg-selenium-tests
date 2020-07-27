@@ -10,11 +10,13 @@ from pages.git_hub.new_issue import GitHubNewIssue
 from pages.git_hub.new_repo import GitHubNewRepo
 from selenium.webdriver.remote.webdriver import WebDriver
 
+from pages.git_hub.repo import GitHubRepoMain
 from pages.repo_list import GitHubRepoList
 
 AVOID_DELETION_REPOS = {
     'kolakowskajoanna': [
-        'TEST__jolo'
+        'testowe',
+        'TEST__jolo',
         'praca_dyplomowa',
         'zadanie_fakultet',
         'fakultet',
@@ -72,6 +74,7 @@ def test_login(actions: Actions, github_user: GitHubUser):
 @pytest.mark.github
 @pytest.mark.parametrize("github_user_with_repo", [
     GitHubUserWithRepo(asia, GitHubRepo('TEST__jolo')),
+    GitHubUserWithRepo(asia, GitHubRepo('testowe')),
     GitHubUserWithRepo(asia, GitHubRepo('INNE_cos', False))
 
 ])
@@ -184,6 +187,7 @@ def test_delete_repos(actions: Actions, driver: WebDriver, github_user: GitHubUs
         github_delete_page.open()
         github_delete_page.delete()
         github_delete_page.confirm()
+        assert github_delete_page.title == 'GitHub', 'nie usunieto'
 
 
 @pytest.mark.github
@@ -212,5 +216,34 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
         github_delete_page.open()
         github_delete_page.delete()
         github_delete_page.confirm()
+        assert github_delete_page.title == 'GitHub', 'nie usunieto'
 
 
+@pytest.mark.github
+@pytest.mark.parametrize(
+    "github_user_with_repo, branchname",
+    [
+        [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), 'asjo']
+    ]
+)
+def test_add_new_branch(actions: Actions, driver: WebDriver,
+                        github_user_with_repo: GitHubUserWithRepo, branchname: str):
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user_with_repo.user.username,
+        password=github_user_with_repo.user.password
+    )
+    github_repo_page = GitHubRepoMain(actions, github_user_with_repo)
+    github_repo_page.open()
+    github_repo_page.add_branch(branchname=branchname)
+    assert github_repo_page.title == f'{github_user_with_repo.user.username}/{github_user_with_repo.repo.name} ' \
+                                     f'at {branchname}'
+
+
+# todo: test add new branch
+# todo: test add commit from new branch
+# todo: test create pull request master <- new branch
+# todo: confirm merge
+# todo: delete branch
