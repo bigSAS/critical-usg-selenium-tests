@@ -286,8 +286,8 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
         [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), "asjo", "best", "Testowy commit"]
     ]
 )
-def add_new_commit(actions: Actions, driver: WebDriver,
-                   github_user_with_repo: GitHubUserWithRepo, branchname: str, filename: str, file_text: str):
+def test_add_new_commit(actions: Actions, driver: WebDriver,
+                        github_user_with_repo: GitHubUserWithRepo, branchname: str, filename: str, file_text: str):
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
     github_login_page.goto_login_form()
