@@ -283,7 +283,7 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
 @pytest.mark.parametrize(
     "github_user_with_repo, branchname, filename",
     [
-        [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), "asjo", "best", "Testowy commit"]
+        [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), "asjo", "best"]
     ]
 )
 def test_add_new_commit(actions: Actions, driver: WebDriver,
