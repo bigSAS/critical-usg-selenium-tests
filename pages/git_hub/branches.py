@@ -7,7 +7,7 @@ from data_classes.github import GitHubUserWithRepo
 class GitHubBranches(Page):
     url = 'https://github.com/{username}/{reponame}/branches'
     delete_branch_button = Selector(Using.XPATH,
-                                    '//form[@action="/kolakowskajoanna/fakultet/branches/{branchname}"]//button')
+                                    '//form[@action="/{username}/{reponame}/branches/{branchname}"]//button')
 
     def __init__(self, actions: Actions, github_user_with_repo: GitHubUserWithRepo):
         super().__init__(actions)
@@ -23,6 +23,10 @@ class GitHubBranches(Page):
             super().open(uri)
 
     def delete_branch(self, branchname: str):
-        self.actions.click(self.delete_branch_button.parameterized(branchname=branchname))
+        self.actions.click(self.delete_branch_button.parameterized(
+            username=self.github_user_with_repo.user.username,
+            reponame=self.github_user_with_repo.repo.name,
+            branchname=branchname
+        ))
 
 

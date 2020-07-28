@@ -141,7 +141,7 @@ def test_add_new_issue(actions: Actions, driver: WebDriver,
         comment=comment
     )
     github_add_new_issue_page.submit()
-
+    # todo: add assert
 
 @pytest.mark.github
 @pytest.mark.test
@@ -197,6 +197,7 @@ def test_add_new_commit(actions: Actions, driver: WebDriver,
         filename=filename
     )
     github_new_commit_page.submit()
+    # todo: add assert
 
 
 @pytest.mark.github
