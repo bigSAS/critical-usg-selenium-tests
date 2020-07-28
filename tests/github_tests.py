@@ -8,6 +8,7 @@ from framework.conditions import XpathExists
 from pages.git_hub.branches import GitHubBranches
 from pages.git_hub.delete_repo import DeleteRepo
 from pages.git_hub.login import GitHubLogin
+from pages.git_hub.new_file import GitHubNewCommit
 from pages.git_hub.new_issue import GitHubNewIssue
 from pages.git_hub.new_repo import GitHubNewRepo
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -171,7 +172,7 @@ def test_add_new_branch(actions: Actions, driver: WebDriver,
 
 
 @pytest.mark.github
-@pytest.mark.test
+# @pytest.mark.test
 @pytest.mark.parametrize(
     "github_user_with_repo, branchname",
     [
@@ -277,8 +278,30 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
         assert github_delete_page.title == 'GitHub', 'nie usunieto'
 
 
-
-
+@pytest.mark.github
+@pytest.mark.test
+@pytest.mark.parametrize(
+    "github_user_with_repo, branchname, filename, file_text",
+    [
+        [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), "asjo", "best", "Testowy commit"]
+    ]
+)
+def add_new_commit(actions: Actions, driver: WebDriver,
+                   github_user_with_repo: GitHubUserWithRepo, branchname: str, filename: str, file_text: str):
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user_with_repo.user.username,
+        password=github_user_with_repo.user.password
+    )
+    github_new_commit_page = GitHubNewCommit(actions, github_user_with_repo, branchname)
+    github_new_commit_page.open()
+    github_new_commit_page.fill_form(
+        filename=filename,
+        file_text=file_text
+    )
+    github_new_commit_page.submit()
 
 
 # todo: test add commit from new branch
