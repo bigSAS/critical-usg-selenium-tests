@@ -281,13 +281,13 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
 @pytest.mark.github
 @pytest.mark.test
 @pytest.mark.parametrize(
-    "github_user_with_repo, branchname, filename, file_text",
+    "github_user_with_repo, branchname, filename",
     [
         [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), "asjo", "best", "Testowy commit"]
     ]
 )
 def test_add_new_commit(actions: Actions, driver: WebDriver,
-                        github_user_with_repo: GitHubUserWithRepo, branchname: str, filename: str, file_text: str):
+                        github_user_with_repo: GitHubUserWithRepo, branchname: str, filename: str):
     github_login_page = GitHubLogin(actions)
     github_login_page.open()
     github_login_page.goto_login_form()
@@ -298,13 +298,10 @@ def test_add_new_commit(actions: Actions, driver: WebDriver,
     github_new_commit_page = GitHubNewCommit(actions, github_user_with_repo, branchname)
     github_new_commit_page.open()
     github_new_commit_page.fill_form(
-        filename=filename,
-        file_text=file_text
+        filename=filename
     )
     github_new_commit_page.submit()
 
 
-# todo: test add commit from new branch
 # todo: test create pull request master <- new branch
 # todo: confirm merge
-

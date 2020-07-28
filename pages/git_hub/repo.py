@@ -28,5 +28,3 @@ class GitHubRepoMain(Page):
         self.actions.type_text(self.branch_name_input, branchname)
         self.actions.wait_for(XpathExists("//span[contains(.,'Create branch')]"))
         self.actions.click(self.create_branch_button)
-
-

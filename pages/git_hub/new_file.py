@@ -1,5 +1,4 @@
 from framework.action_framework import Page, Actions
-from framework.conditions import XpathExists
 from framework.selector import Selector, Using
 from data_classes.github import GitHubUserWithRepo
 
@@ -28,17 +27,11 @@ class GitHubNewCommit(Page):
             )
             super().open(uri)
 
-    def fill_form(self, filename, file_text):
+    def fill_form(self, filename):
         self.actions.type_text(self.file_name_input, filename)
-        self.actions.type_text(self.file_text_input, file_text)
-        self.actions.type_text(self.commit_name_input, f'add {filename}')
-        self.actions.type_text(self.commit_description_input, f'{filename} ist zuper')
+        # self.actions.type_text(self.file_text_input, file_text)
+        # self.actions.type_text(self.commit_name_input, f'add {filename}')
+        # self.actions.type_text(self.commit_description_input, f'{filename} ist zuper')
 
     def submit(self):
         self.actions.click(self.submit_commit_button)
-
-
-
-
-
-
