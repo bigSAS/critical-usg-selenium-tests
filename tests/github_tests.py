@@ -148,13 +148,13 @@ def test_add_new_issue(actions: Actions, driver: WebDriver,
 @pytest.mark.parametrize(
     "github_user_with_repo, branchname",
     [
-        [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), "asjo"]
+        [GitHubUserWithRepo(asia, GitHubRepo('TEST__check')), "asjo"]
     ]
 )
 def test_add_new_branch(actions: Actions, driver: WebDriver,
                         github_user_with_repo: GitHubUserWithRepo, branchname: str):
     """
-    Add new branch
+    Stworzenie nowego brancha
 
     """
     github_login_page = GitHubLogin(actions)
@@ -172,17 +172,45 @@ def test_add_new_branch(actions: Actions, driver: WebDriver,
 
 
 @pytest.mark.github
-# @pytest.mark.test
+@pytest.mark.test
+@pytest.mark.parametrize(
+    "github_user_with_repo, branchname, filename",
+    [
+        [GitHubUserWithRepo(asia, GitHubRepo('TEST__check')), "asjo", "best"]
+    ]
+)
+def test_add_new_commit(actions: Actions, driver: WebDriver,
+                        github_user_with_repo: GitHubUserWithRepo, branchname: str, filename: str):
+    """
+    Dodoanie nowego commitu do nowego brancha
+    """
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user_with_repo.user.username,
+        password=github_user_with_repo.user.password
+    )
+    github_new_commit_page = GitHubNewCommit(actions, github_user_with_repo, branchname)
+    github_new_commit_page.open()
+    github_new_commit_page.fill_form(
+        filename=filename
+    )
+    github_new_commit_page.submit()
+
+
+@pytest.mark.github
+@pytest.mark.test
 @pytest.mark.parametrize(
     "github_user_with_repo, branchname",
     [
-        [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), "asjo"]
+        [GitHubUserWithRepo(asia, GitHubRepo('TEST__check')), "asjo"]
     ]
 )
 def test_delete_branch(actions: Actions, driver: WebDriver,
                        github_user_with_repo: GitHubUserWithRepo, branchname: str):
     """
-    Delete branch
+    Usunięcie brancha
 
     """
     github_login_page = GitHubLogin(actions)
@@ -276,31 +304,6 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
         github_delete_page.delete()
         github_delete_page.confirm()
         assert github_delete_page.title == 'GitHub', 'nie usunieto'
-
-
-@pytest.mark.github
-@pytest.mark.test
-@pytest.mark.parametrize(
-    "github_user_with_repo, branchname, filename",
-    [
-        [GitHubUserWithRepo(asia, GitHubRepo('fakultet')), "asjo", "best"]
-    ]
-)
-def test_add_new_commit(actions: Actions, driver: WebDriver,
-                        github_user_with_repo: GitHubUserWithRepo, branchname: str, filename: str):
-    github_login_page = GitHubLogin(actions)
-    github_login_page.open()
-    github_login_page.goto_login_form()
-    github_login_page.login(
-        username=github_user_with_repo.user.username,
-        password=github_user_with_repo.user.password
-    )
-    github_new_commit_page = GitHubNewCommit(actions, github_user_with_repo, branchname)
-    github_new_commit_page.open()
-    github_new_commit_page.fill_form(
-        filename=filename
-    )
-    github_new_commit_page.submit()
 
 
 # todo: test create pull request master <- new branch
