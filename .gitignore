@@ -13,3 +13,4 @@ configurationz/*.txt
 style.css
 reports/*.html
 reports/screenshots/*.png
+debug.log
