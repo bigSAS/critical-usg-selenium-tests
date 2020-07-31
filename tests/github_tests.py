@@ -8,11 +8,13 @@ from framework.conditions import XpathExists
 from pages.git_hub.branches import GitHubBranches
 from pages.git_hub.delete_repo import DeleteRepo
 from pages.git_hub.login import GitHubLogin
+from pages.git_hub.merge import GitHubMerge
 from pages.git_hub.new_file import GitHubNewCommit
 from pages.git_hub.new_issue import GitHubNewIssue
 from pages.git_hub.new_repo import GitHubNewRepo
 from selenium.webdriver.remote.webdriver import WebDriver
 
+from pages.git_hub.pull_request import GitHubNewPullRequest
 from pages.git_hub.repo import GitHubRepoMain
 from pages.repo_list import GitHubRepoList
 
@@ -49,12 +51,13 @@ def get_password(username: str) -> str:
         raise Exception('Read password file failed ...\n' + repr(e))
 
 
-asia = GitHubUser('kolakowskajoanna', get_password('kolakowskajoanna'))
+# asia = GitHubUser('kolakowskajoanna', get_password('kolakowskajoanna'))
 # sas = GitHubUser('bigSAS', get_password('bigSAS'))
+tester = GitHubUser('jtesterk', get_password('jtesterk'))
 
 
 @pytest.mark.github
-@pytest.mark.parametrize("github_user", [asia])
+@pytest.mark.parametrize("github_user", [tester])
 def test_login(actions: Actions, github_user: GitHubUser):
     """
     Logowanie
@@ -76,10 +79,7 @@ def test_login(actions: Actions, github_user: GitHubUser):
 
 @pytest.mark.github
 @pytest.mark.parametrize("github_user_with_repo", [
-    GitHubUserWithRepo(asia, GitHubRepo('TEST__jolo')),
-    GitHubUserWithRepo(asia, GitHubRepo('TEST__check')),
-    GitHubUserWithRepo(asia, GitHubRepo('TEST__fjus', False))
-
+    GitHubUserWithRepo(tester, GitHubRepo('TEST__check'))
 ])
 def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
     """
@@ -98,7 +98,7 @@ def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
         password=github_user_with_repo.user.password
     )
     github_new_repo_form = GitHubNewRepo(actions)
-    github_new_repo_form.goto_new_repo_form()
+    github_new_repo_form.open()
     github_new_repo_form.fill_form(public=github_user_with_repo.repo.public, reponame=github_user_with_repo.repo.name)
     github_new_repo_form.submit()
     assert github_new_repo_form.title == f'{github_user_with_repo.user.username}/{github_user_with_repo.repo.name}', \
@@ -110,7 +110,7 @@ def test_new_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
 @pytest.mark.parametrize(
     "github_user, reponame, title, comment",
     [
-        [asia, 'TEST__fjus', 'hajo error', 'dej fitke'],
+        [tester, 'TEST__check', 'hajo error', 'dej fitke'],
     ]
 )
 def test_add_new_issue(actions: Actions, driver: WebDriver,
@@ -143,12 +143,13 @@ def test_add_new_issue(actions: Actions, driver: WebDriver,
     github_add_new_issue_page.submit()
     # todo: add assert
 
+
 @pytest.mark.github
 @pytest.mark.test
 @pytest.mark.parametrize(
     "github_user_with_repo, branchname",
     [
-        [GitHubUserWithRepo(asia, GitHubRepo('TEST__check')), "asjo"]
+        [GitHubUserWithRepo(tester, GitHubRepo('TEST__check')), "best"]
     ]
 )
 def test_add_new_branch(actions: Actions, driver: WebDriver,
@@ -176,7 +177,7 @@ def test_add_new_branch(actions: Actions, driver: WebDriver,
 @pytest.mark.parametrize(
     "github_user_with_repo, branchname, filename",
     [
-        [GitHubUserWithRepo(asia, GitHubRepo('TEST__check')), "asjo", "best"]
+        [GitHubUserWithRepo(tester, GitHubRepo('TEST__check')), "best", "test101"]
     ]
 )
 def test_add_new_commit(actions: Actions, driver: WebDriver,
@@ -197,7 +198,7 @@ def test_add_new_commit(actions: Actions, driver: WebDriver,
         filename=filename
     )
     github_new_commit_page.submit()
-    # todo: add assert
+    # todo: add assertion
 
 
 @pytest.mark.github
@@ -205,7 +206,56 @@ def test_add_new_commit(actions: Actions, driver: WebDriver,
 @pytest.mark.parametrize(
     "github_user_with_repo, branchname",
     [
-        [GitHubUserWithRepo(asia, GitHubRepo('TEST__check')), "asjo"]
+        [GitHubUserWithRepo(tester, GitHubRepo('TEST__check')), "best"]
+    ]
+)
+def test_create_pull_request(actions: Actions, driver: WebDriver,
+                             github_user_with_repo: GitHubUserWithRepo, branchname: str):
+    """
+    Create pull request master <- new_branch
+    """
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user_with_repo.user.username,
+        password=github_user_with_repo.user.password
+    )
+    github_new_pull_request_page = GitHubNewPullRequest(actions, github_user_with_repo, branchname)
+    github_new_pull_request_page.open()
+    github_new_pull_request_page.create()
+
+
+@pytest.mark.github
+@pytest.mark.test
+@pytest.mark.parametrize(
+    "github_user_with_repo", [GitHubUserWithRepo(tester, GitHubRepo('TEST__check'))])
+def test_merge(actions: Actions, driver: WebDriver,
+               github_user_with_repo: GitHubUserWithRepo):
+    """
+    Marge
+    """
+    github_login_page = GitHubLogin(actions)
+    github_login_page.open()
+    github_login_page.goto_login_form()
+    github_login_page.login(
+        username=github_user_with_repo.user.username,
+        password=github_user_with_repo.user.password
+    )
+    github_merge_page = GitHubMerge(actions, github_user_with_repo)
+    github_merge_page.open()
+    github_merge_page.pick_pull_requests()
+    github_merge_page.create()
+
+    # assert not XpathExists(github_merge_page.xpath_pull_request), "arono"
+
+
+@pytest.mark.github
+@pytest.mark.test
+@pytest.mark.parametrize(
+    "github_user_with_repo, branchname",
+    [
+        [GitHubUserWithRepo(tester, GitHubRepo('TEST__check')), "best"]
     ]
 )
 def test_delete_branch(actions: Actions, driver: WebDriver,
@@ -230,7 +280,7 @@ def test_delete_branch(actions: Actions, driver: WebDriver,
 
 @pytest.mark.deletion
 @pytest.mark.parametrize("github_user_with_repo", [
-    GitHubUserWithRepo(asia, GitHubRepo('INNE_cos'))])
+    GitHubUserWithRepo(tester, GitHubRepo('INNE_cos'))])
 def test_delete_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo):
     """
     Usunięcie danego repozytorium
@@ -251,7 +301,7 @@ def test_delete_repo(actions: Actions, github_user_with_repo: GitHubUserWithRepo
 
 
 @pytest.mark.deletion
-@pytest.mark.parametrize("github_user", [asia])
+@pytest.mark.parametrize("github_user", [tester])
 def test_delete_repos(actions: Actions, driver: WebDriver, github_user: GitHubUser):
     """
     Usunięcie repozytoriów spoza whitelist
@@ -279,7 +329,7 @@ def test_delete_repos(actions: Actions, driver: WebDriver, github_user: GitHubUs
 
 
 @pytest.mark.github
-@pytest.mark.parametrize("github_user", [asia])
+@pytest.mark.parametrize("github_user", [tester])
 def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_user: GitHubUser):
     """
     Usunięcie repozytoriów z prefixem 'TEST__'
@@ -305,7 +355,3 @@ def test_delete_repos_with_prefix(actions: Actions, driver: WebDriver, github_us
         github_delete_page.delete()
         github_delete_page.confirm()
         assert github_delete_page.title == 'GitHub', 'nie usunieto'
-
-
-# todo: test create pull request master <- new branch
-# todo: confirm merge
