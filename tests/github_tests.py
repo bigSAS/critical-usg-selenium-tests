@@ -51,7 +51,7 @@ def get_password(username: str) -> str:
         raise Exception('Read password file failed ...\n' + repr(e))
 
 
-# asia = GitHubUser('kolakowskajoanna', get_password('kolakowskajoanna'))
+asia = GitHubUser('kolakowskajoanna', get_password('kolakowskajoanna'))
 # sas = GitHubUser('bigSAS', get_password('bigSAS'))
 tester = GitHubUser('jtesterk', get_password('jtesterk'))
 
